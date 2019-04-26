@@ -13,7 +13,7 @@
         $("textarea").prop('disabled',true)
 
 				//Rebuild the machine if the key changes
-				$("input[name=key]").keyup(function(){
+				$("input[name=key]").on("change",function(){
 					reel = new Reel(r1,r2,$("input[name=key]").val()*1);
 					$("span[name=plain_text]").html(reel.plain_text.join('|'));
 					$("span[name=cypher_text]").html(reel.cypher_text.join('|'));
@@ -21,9 +21,12 @@
 
 					$("textarea[name=plain_text]").trigger('keyup');
 				});
+				$("input[name=key]").on("keyup",function(){
+					$("input[name=key]").trigger('change');
+				});
 
         //Encrypt text as user keys it in
-        $("textarea[name=plain_text]").keyup(function(){
+        $("textarea[name=plain_text]").on("change",function(){
           //convert to upper case and replace spaces with underscores
           let plain_text = $(this).val().toUpperCase().replace(/\s/g, '_');
 
@@ -38,9 +41,12 @@
 					$("span[name=plain_text]").html(reel.plain_text.join('|'));
 					$("span[name=cypher_text]").html(reel.cypher_text.join('|'));
         });
+				$("textarea[name=plain_text]").on("keyup",function(){
+					$("textarea[name=plain_text]").trigger('change');
+				});
 
         //decrypt text as user keys it in
-        $("textarea[name=cypher_text]").keyup(function(){
+        $("textarea[name=cypher_text]").on("change",function(){
           //convert to upper case
           let cypher_text = $(this).val().toUpperCase();
 
@@ -58,6 +64,10 @@
 					$("span[name=plain_text]").html(reel.plain_text.join('|'));
 					$("span[name=cypher_text]").html(reel.cypher_text.join('|'));
         });
+				$("textarea[name=cypher_text]").on("keyup",function(){
+					$("textarea[name=cypher_text]").trigger('change');
+				});
+
       });
     </script>
 		<link rel="stylesheet" href="styles.css">
