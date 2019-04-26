@@ -1,0 +1,77 @@
+<html>
+  <head>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+    <script src="Reel.js" type="text/ecmascript"></script>
+    <script type="text/javascript">
+
+			let reel = {};
+      $(function(){
+        //Create character mappings.
+        const r1 = "WF.LYGAIT9_7PEZSCJMKODHRV83?X205N1UQ64B";
+        const r2 = "JB6HOAS?RLTF4YE057MG_P81N.XDZIUCV29WKQ3";
+
+        $("textarea").prop('disabled',true)
+
+				//Rebuild the machine if the key changes
+				$("input[name=key]").keyup(function(){
+					reel = new Reel(r1,r2,$("input[name=key]").val()*1);
+					$("span[name=plain_text]").html(reel.plain_text.join('|'));
+					$("span[name=cypher_text]").html(reel.cypher_text.join('|'));
+          $("textarea").prop('disabled',false)
+
+					$("textarea[name=plain_text]").trigger('keyup');
+				});
+
+        //Encrypt text as user keys it in
+        $("textarea[name=plain_text]").keyup(function(){
+          //convert to upper case and replace spaces with underscores
+          let plain_text = $(this).val().toUpperCase().replace(/\s/g, '_');
+
+          //TODO: only allow charactes that are present on r1;
+
+          //encrypt the plain text
+          let cypher_text = reel.encode(plain_text);
+
+          //show the user
+          $("textarea[name=cypher_text]").val(cypher_text);
+
+					$("span[name=plain_text]").html(reel.plain_text.join('|'));
+					$("span[name=cypher_text]").html(reel.cypher_text.join('|'));
+        });
+
+        //decrypt text as user keys it in
+        $("textarea[name=cypher_text]").keyup(function(){
+          //convert to upper case
+          let cypher_text = $(this).val().toUpperCase();
+
+          //TODO: only allow charactes that are present on r1;
+
+          //decypt the cypher text
+          let plain_text = reel.decode(cypher_text);
+
+          //remove underscores and replace with spaces
+          plain_text = plain_text.replace(/\_/g, ' ');
+
+          //show the user
+          $("textarea[name=plain_text]").val(plain_text);
+
+					$("span[name=plain_text]").html(reel.plain_text.join('|'));
+					$("span[name=cypher_text]").html(reel.cypher_text.join('|'));
+        });
+      });
+    </script>
+		<link rel="stylesheet" href="styles.css">
+  </head>
+  <body>
+    Encryption Key: <input type="number" name="key" min=0, max=9999 value=0/>
+    <br>
+    <span><b>Plain Text:</b></span><br>
+    <textarea name="plain_text" rows="8" cols="80"></textarea>
+		<hr>
+			<span class="pre" name="plain_text"></span>
+			<span class="pre" name="cypher_text"></span>
+    <hr>
+    <span><b>Cypher Text:</b></span><br>
+    <textarea name="cypher_text" rows="8" cols="80"></textarea>
+  </body>
+</html>
